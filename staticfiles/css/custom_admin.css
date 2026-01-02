@@ -1,0 +1,18 @@
+/* Make cards float with shadow */
+.card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    border: none !important;
+}
+
+/* Round the buttons */
+.btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+/* Make the header font cooler */
+.brand-link {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    letter-spacing: 1px;
+}

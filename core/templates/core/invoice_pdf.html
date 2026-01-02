@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 1cm; /* Give it some breathing room */
+        }
+        
+        body {
+            font-family: Helvetica, sans-serif;
+            color: #334155; /* Slate 700 */
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADER SECTION */
+        .header-table {
+            width: 100%;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #2563eb; /* The Brand Blue Line */
+            padding-bottom: 20px;
+        }
+        
+        .logo-text {
+            font-size: 26px;
+            font-weight: bold;
+            color: #2563eb; /* Brand Blue */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .logo-sub {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .invoice-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e2e8f0; /* Very light grey watermark style */
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        /* INFO BOXES */
+        .info-table {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #94a3b8; /* Light Grey */
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #0f172a; /* Navy Dark */
+        }
+
+        .info-value-lg {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* BILL TABLE */
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .bill-table th {
+            text-align: left;
+            padding: 12px 10px;
+            background-color: #f1f5f9; /* Slate 100 */
+            color: #475569;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .bill-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        /* TOTALS SECTION */
+        .totals-box {
+            width: 45%;
+            margin-left: auto;
+            background-color: #f8fafc; /* Very light background for totals */
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .total-row {
+            padding: 6px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .total-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #0f172a;
+        }
+
+        .t-label { float: left; color: #64748b; font-size: 12px; font-weight: bold; }
+        .t-value { float: right; font-weight: bold; font-size: 13px; }
+
+        .balance-due {
+            color: {% if bill.pending_amount > 0 %}#dc2626{% else %}#166534{% endif %};
+            font-size: 16px;
+        }
+
+        /* FOOTER */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="header-table">
+        <tr>
+            <td width="60%">
+                <div class="logo-text">The Smile Space</div>
+                <div class="logo-sub">Premium Orthodontics & Dental Care</div>
+            </td>
+            <td width="40%" align="right" valign="bottom">
+                <div class="invoice-title">INVOICE</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="info-table">
+        <tr>
+            <td width="50%" valign="top">
+                <div class="info-label">Billed To Patient</div>
+                <div class="info-value-lg">{{ patient.name }}</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                    +91 {{ patient.phone }}<br>
+                    ID: #P-{{ patient.id }}
+                </div>
+            </td>
+
+            <td width="50%" valign="top" align="right">
+                <table width="100%">
+                    <tr>
+                        <td align="right">
+                            <div class="info-label">Invoice Date</div>
+                            <div class="info-value">{{ bill.date }}</div>
+                        </td>
+                        <td align="right" width="40%">
+                            <div class="info-label">Invoice #</div>
+                            <div class="info-value">INV-00{{ bill.id }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right" style="padding-top: 15px;">
+                            <div class="info-label">Payment Status</div>
+                            <div style="
+                                display: inline-block;
+                                padding: 4px 10px;
+                                border-radius: 20px;
+                                font-size: 10px;
+                                font-weight: bold;
+                                background-color: {% if bill.pending_amount > 0 %}#fef2f2{% else %}#f0fdf4{% endif %};
+                                color: {% if bill.pending_amount > 0 %}#dc2626{% else %}#166534{% endif %};
+                                border: 1px solid {% if bill.pending_amount > 0 %}#fecaca{% else %}#bbf7d0{% endif %};
+                            ">
+                                {{ bill.payment_status|upper }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th width="70%">Description / Procedure</th>
+                <th width="30%" align="right">Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div style="font-weight: bold; color: #0f172a; margin-bottom: 4px;">Dental Treatment</div>
+                    <div style="color: #64748b; font-size: 12px; line-height: 1.4;">
+                        {{ bill.treatments }}
+                    </div>
+                </td>
+                <td align="right" valign="top" style="font-weight: bold;">₹{{ bill.total_amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="totals-box">
+        <div class="total-row">
+            <span class="t-label">Subtotal</span>
+            <span class="t-value">₹{{ bill.total_amount }}</span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="total-row">
+            <span class="t-label" style="color: #166534;">Amount Paid</span>
+            <span class="t-value" style="color: #166534;">- ₹{{ bill.amount_paid }}</span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="total-row">
+            <span class="t-label" style="font-size: 13px; color: #0f172a; margin-top: 3px;">BALANCE DUE</span>
+            <span class="t-value balance-due">₹{{ bill.pending_amount }}</span>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; border-left: 3px solid #2563eb; padding-left: 15px;">
+        <div style="font-size: 11px; font-weight: bold; color: #0f172a;">Note:</div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+            Please retain this invoice for your records. For any billing discrepancies, contact the front desk within 24 hours.
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>The Smile Space</strong> • Rizvi Complex, Mumbai • +91 99999 88888
+    </div>
+
+</body>
+</html>
